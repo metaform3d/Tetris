@@ -203,8 +203,17 @@ public:
     }
 };
 
+extern bool randomNeedSeeding;
+
 template <typename Scalar>
 struct Random {
+	Random() {
+		if (randomNeedSeeding) {
+			srand((unsigned int)time(nullptr));
+			randomNeedSeeding = false;
+		}
+	}
+
 	Scalar unit() const {
 		return Scalar(rand() / (RAND_MAX + 1.0));
 	}

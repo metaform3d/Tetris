@@ -373,6 +373,8 @@ public:
 	};
 };
 
+bool randomNeedSeeding = true;
+
 int main() {
 	Tetris::Game application;
 	application.run();
