@@ -268,6 +268,7 @@ public:
 
 		std::unique_ptr<Logic> tetris{ new Logic };
 		float dropTimer = 0;
+		bool isPaused = false;
 
 		std::string gi_windowName() override {
 			return "Tetris";
@@ -364,7 +365,19 @@ public:
 			}
 		}
 
+		void gi_event(sf::Event& event) override {
+			if (event.type == sf::Event::LostFocus) {
+				isPaused = true;
+			}
+			if (event.type == sf::Event::GainedFocus) {
+				isPaused = false;
+			}
+		}
+
 		void gi_update(float dt) override {
+			if (isPaused) {
+				return;
+			}
 			dropTimer -= dt;
 			if (dropTimer < 0) {
 				dropDown();
