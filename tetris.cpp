@@ -91,7 +91,7 @@ public:
 		sf::Vector2f center;
 		int color = -2;
 
-		void shape(Square const d[4], float centerX = 0, float centerY = 0) {
+		void shape(std::vector<Square> const &d, float centerX = 0, float centerY = 0) {
 			for (int i = 0; i < 4; i++) {
 				deltas[i] = d[i];
 			}
@@ -101,32 +101,25 @@ public:
 		void setup(int color) {
 			position.x = GRID_WIDTH / 2;
 			position.y = -1;
+			this->color = color;
 			if (color == 1) {
-				Square d[4] = { { -2, 0 }, { -1, 0 }, { 0, 0 }, { 1, 0 } };
-				shape(d, -0.5f, 0.5f);
+				shape({{ -2, 0 }, { -1, 0 }, { 0, 0 }, { 1, 0 }}, -0.5f, 0.5f);
 			} else if (color == 2) {
-				Square d[4] = { { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
-				shape(d);
+				shape({{ -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }});
 			} else if (color == 3) {
-				Square d[4] = { { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
-				shape(d);
+				shape({{ 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }});
 			} else if (color == 4) {
-				Square d[4] = { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } };
-				shape(d, 0.5f, 0.5f);
+				shape({{ 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }}, 0.5f, 0.5f);
 				position.x -= 1;
 			} else if (color == 5) {
-				Square d[4] = { { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 } };
-				shape(d);
+				shape({{ 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }});
 			} else if (color == 6) {
-				Square d[4] = { { 0, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 } };
-				shape(d);
+				shape({{ 0, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }});
 			} else if (color == 7) {
-				Square d[4] = { { -1, 0 }, { 0, 0 }, { 0, 1 }, { 1, 1 } };
-				shape(d);
+				shape({{ -1, 0 }, { 0, 0 }, { 0, 1 }, { 1, 1 }});
 			} else {
 				assert(false);
 			}
-			this->color = color;
 		}
 
 		int value(Square pos) const override {
