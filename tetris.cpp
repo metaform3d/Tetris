@@ -232,16 +232,19 @@ public:
 		}
 
 		void rotate(bool cw) {
-			mino.rotate(cw);
-			if (mino.collides(storage, Square(0, 0))) {
-				mino.rotate(!cw);
+			auto rotated = mino;
+			rotated.rotate(cw);
+			if (rotated.collides(storage, Square(0, 0))) {
 				return;
 			}
-			int startX = mino.position.x;
-			int sign = startX < GRID_WIDTH / 2 ? 1 : -1;
-			while (mino.collides(boundary, Square(0, 0))) {
-				mino.position.x += sign;
+			int sign = rotated.position.x < GRID_WIDTH / 2 ? 1 : -1;
+			while (rotated.collides(boundary, Square(0, 0))) {
+				rotated.position.x += sign;
 			}
+			if (rotated.collides(background, Square(0, 0))) {
+				return;
+			}
+			mino = rotated;
 			updateGhost();
 		}
 
