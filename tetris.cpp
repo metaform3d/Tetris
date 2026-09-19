@@ -289,7 +289,7 @@ public:
 
 		class ColorPass : public BlockPass {
 		public:
-			const sf::Uint8 colors[7 * 3] = {
+			const std::uint8_t colors[7 * 3] = {
 				105, 225, 240,  70, 115, 195,  225, 135, 40,  240, 240, 90,
 				95, 240, 95,  175, 60, 240,  240, 30, 30
 			};
@@ -322,7 +322,7 @@ public:
 
 			ColorPass colorPass;
 			colorPass.block.setSize({ size - 2, size - 2 });
-			colorPass.block.setOrigin(-1.f, -1.f);
+			colorPass.block.setOrigin({-1.f, -1.f});
 			drawPass(window, tetris->colorBlocks, colorPass);
 
 			common.block = colorPass.block;
@@ -334,7 +334,7 @@ public:
 
 		void checkGameOver() {
 			if (tetris->gameOver()) {
-				printf("game over, score: %d\n" + tetris->storage.linesCleared);
+				printf("game over, score: %d\n", tetris->storage.linesCleared);
 				tetris = std::make_unique<Logic>();
 			}
 		}
@@ -361,11 +361,11 @@ public:
 			}
 		}
 
-		void gi_event(sf::Event& event) override {
-			if (event.type == sf::Event::LostFocus) {
+		void gi_event(const sf::Event& event) override {
+			if (event.is<sf::Event::FocusLost>()) {
 				isPaused = true;
 			}
-			if (event.type == sf::Event::GainedFocus) {
+			if (event.is<sf::Event::FocusGained>()) {
 				isPaused = false;
 			}
 		}

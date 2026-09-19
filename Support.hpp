@@ -3,6 +3,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <cassert>
+#include <cmath>
 
 template <typename Element>
 std::vector<Element> repeating(Element const& val, int count)
@@ -31,7 +32,7 @@ struct Square
 
 	Square(int xx, int yy) : x(xx), y(yy) { }
 
-	Square(sf::Vector2f vec) : x(int(round(vec.x))), y(int(round(vec.y))) { }
+	Square(sf::Vector2f vec) : x(int(std::round(vec.x))), y(int(std::round(vec.y))) { }
 
 	Square operator+ (const Square& rhs) const {
 		return Square(x + rhs.x, y + rhs.y);
@@ -161,33 +162,32 @@ public:
 
     virtual void gi_redraw(sf::RenderWindow& window) = 0;
     virtual void gi_update(float dt) { }
-    virtual void gi_event(sf::Event& event) { }
-    virtual void gi_keyOnce(sf::Keyboard::Scancode key) { }
+    virtual void gi_event(const sf::Event& event) { }
+    virtual void gi_keyOnce(const sf::Keyboard::Scancode key) { }
 
     void run()
     {
         sf::Vector2u winSize = gi_windowSize();
-        sf::RenderWindow window(sf::VideoMode(winSize.x, winSize.y), gi_windowName().c_str());
+        sf::RenderWindow window(sf::VideoMode(winSize), gi_windowName().c_str());
         window.setVerticalSyncEnabled(true);
 
         sf::Clock clock;
         sf::Keyboard::Scancode currentKeyDown = sf::Keyboard::Scancode::Unknown;
 
         while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
+            while (const auto event = window.pollEvent()) {
+                if (event->is<sf::Event::Closed>()) {
                     window.close();
                 } else {
-                    gi_event(event);
+                    gi_event(*event);
 
-                    if (event.type == sf::Event::KeyPressed) {
-                        auto code = event.key.scancode;
+                    if (const auto* pressed = event->getIf<sf::Event::KeyPressed>()) {
+						auto code = pressed->scancode;
                         if (code != currentKeyDown) {
                             currentKeyDown = code;
                             gi_keyOnce(code);
                         }
-                    } else if (event.type == sf::Event::KeyReleased) {
+                    } else if (event->is<sf::Event::KeyReleased>()) {
                         currentKeyDown = sf::Keyboard::Scancode::Unknown;
                     }
                 }
